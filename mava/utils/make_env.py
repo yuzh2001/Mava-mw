@@ -37,6 +37,8 @@ from jumanji.environments.routing.robot_warehouse.generator import (
 )
 from omegaconf import DictConfig
 
+from mava.custom_env.multiwalker import MultiWalkerWrapper
+from mava.custom_env.multiwalker.jaxmarl.jaxmarl_mw import MultiWalkerEnv
 from mava.types import MarlEnv
 from mava.wrappers import (
     AgentIDWrapper,
@@ -74,7 +76,12 @@ _jumanji_registry = {
 
 # Registry mapping environment names directly to the corresponding wrapper classes.
 _matrax_registry = {"Matrax": MatraxWrapper}
-_jaxmarl_registry = {"Smax": SmaxWrapper, "MaBrax": MabraxWrapper, "MPE": MPEWrapper}
+_jaxmarl_registry = {
+    "Smax": SmaxWrapper,
+    "MaBrax": MabraxWrapper,
+    "MPE": MPEWrapper,
+    "MultiWalker": MultiWalkerWrapper,
+}
 _gigastep_registry = {"Gigastep": GigastepWrapper}
 
 _gym_registry = {
@@ -153,15 +160,25 @@ def make_jaxmarl_env(config: DictConfig, add_global_state: bool = False) -> Tupl
     elif "mpe" in config.env.env_name.lower():
         kwargs.update(config.env.scenario.task_config)
 
-    # Create jaxmarl envs.
-    train_env: MarlEnv = _jaxmarl_registry[config.env.env_name](
-        jaxmarl.make(config.env.scenario.name, **kwargs),
-        add_global_state,
-    )
-    eval_env: MarlEnv = _jaxmarl_registry[config.env.env_name](
-        jaxmarl.make(config.env.scenario.name, **kwargs),
-        add_global_state,
-    )
+    if "multiwalker" in config.env.env_name.lower():
+        # Create jaxmarl envs.
+        train_env: MarlEnv = _jaxmarl_registry[config.env.env_name](
+            MultiWalkerEnv(**kwargs),
+            add_global_state,
+        )
+        eval_env: MarlEnv = _jaxmarl_registry[config.env.env_name](
+            MultiWalkerEnv(**kwargs),
+            add_global_state,
+        )
+    else:
+        train_env: MarlEnv = _jaxmarl_registry[config.env.env_name](
+            jaxmarl.make(config.env.scenario.name, **kwargs),
+            add_global_state,
+        )
+        eval_env: MarlEnv = _jaxmarl_registry[config.env.env_name](
+            jaxmarl.make(config.env.scenario.name, **kwargs),
+            add_global_state,
+        )
 
     train_env, eval_env = add_extra_wrappers(train_env, eval_env, config)
 

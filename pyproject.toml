@@ -8,7 +8,8 @@ include=['mava*']
 [project]
 name="id-mava"
 authors=[{name="InstaDeep Ltd"}]
-dynamic=["version", "dependencies", "optional-dependencies"]
+version = "0.0.1"
+# dynamic=["version", "dependencies", "optional-dependencies"]
 license={file="LICENSE"}
 description="Distributed Multi-Agent Reinforcement Learning in JAX."
 readme ="README.md"
@@ -28,10 +29,44 @@ classifiers=[
     "Topic :: Software Development :: Libraries :: Python Modules",
     "License :: OSI Approved :: Apache Software License",
 ]
-[tool.setuptools.dynamic]
-version={attr="mava.__version__"}
-dependencies={file="requirements/requirements.txt"}
-optional-dependencies={dev={file=["requirements/requirements-dev.txt"]}}
+dependencies = [
+    "brax==0.10.3",
+    "colorama>=0.4.6",
+    "distrax>=0.1.5",
+    "flashbax~=0.1.0",
+    "flax>=0.8.1",
+    "gigastep",
+    "gymnasium>=1.0.0",
+    "hydra-core==1.3.2",
+    "id-marl-eval",
+    "jax==0.4.30",
+    "jaxlib==0.4.30",
+    "jaxmarl",
+    "jumanji>=1.1.0",
+    "lbforaging>=2.0.0",
+    "matrax>=0.0.5",
+    "mujoco-mjx==3.1.3",
+    "mujoco==3.1.3",
+    "neptune>=1.13.0",
+    "numpy==1.26.4",
+    "omegaconf>=2.3.0",
+    "optax>=0.2.4",
+    "protobuf~=3.20",
+    "rware>=2.0.0",
+    "scipy==1.12.0",
+    "smaclite",
+    "tensorboard-logger>=0.1.0",
+    "tensorflow-probability>=0.25.0",
+    "type-enforced>=1.8.1",
+    "jax2d>=1.0.0",
+    "wandb>=0.19.3",
+    "jaxgl>=1.0.1",
+    "tqdm>=4.67.1",
+]
+# [tool.setuptools.dynamic]
+# version={attr="mava.__version__"}
+# dependencies={file="requirements/requirements.txt"}
+# optional-dependencies={dev={file=["requirements/requirements-dev.txt"]}}
 
 [project.urls]
 "Homepage"="https://github.com/instadeep/Mava"
@@ -60,3 +95,9 @@ ignore=[
 
 [tool.ruff.lint.pep8-naming]
 ignore-names = ["?"]
+
+[tool.uv.sources]
+gigastep = { git = "https://github.com/mlech26l/gigastep" }
+id-marl-eval = { git = "https://github.com/instadeepai/marl-eval" }
+jaxmarl = { git = "https://github.com/RuanJohn/JaxMARL", rev = "unpin-jax" }
+smaclite = { git = "https://github.com/uoe-agents/smaclite.git" }
