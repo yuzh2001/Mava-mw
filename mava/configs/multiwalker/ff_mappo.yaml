@@ -24,13 +24,13 @@ network:
 
 system:
   rollout_length: 500 # Number of environment steps per vectorised environment.
-  num_minibatches: 16 # Number of minibatches per ppo epoch.
+  num_minibatches: 4 # Number of minibatches per ppo epoch.
 
 
 logger:
   use_neptune: True
   kwargs:
-    neptune_project: itechs-MA/Mava-Multiwalker-mappo
+    neptune_project: itechs-MA/Mava-Multiwalker
     neptune_tag: [mw-mappo-ff]
   
   checkpointing:

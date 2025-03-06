@@ -207,7 +207,7 @@ class MultiWalkerEnv(MultiAgentEnv):
     @partial(jax.jit, static_argnums=0)
     def get_world_obs(self, env_state: StateWithStep, obs: Dict[str, chex.Array]):
         env_state = env_state.state
-        package_index = self._env.num_agents * 5 + 1
+        package_index = self.n_walkers * 5 + 1
         package_obs = jnp.array(
             [
                 env_state.polygon.position[package_index][0],
@@ -217,11 +217,11 @@ class MultiWalkerEnv(MultiAgentEnv):
         )
         all_obs = jnp.concatenate(
             [
-                jnp.array([obs[agent] for agent in self._env.agents]).flatten(),
+                jnp.array([obs[agent] for agent in self.agents]).flatten(),
                 package_obs,
             ]
         ).flatten()
-        all_obs = jnp.expand_dims(all_obs, axis=0).repeat(self._env.num_agents, axis=0)
+        all_obs = jnp.expand_dims(all_obs, axis=0) #.repeat(self.num_agents, axis=0)
         return all_obs
 
     def get_obs(self, state: StateWithStep) -> Dict[str, chex.Array]:
